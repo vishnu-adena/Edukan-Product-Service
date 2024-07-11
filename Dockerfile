@@ -1,39 +1,27 @@
-## Use the latest Ubuntu image as base
-#FROM ubuntu:latest
-#
-## Install Java and Maven
-#RUN apt-get update && apt-get install -y openjdk-21-jdk maven
-#
-## Set JAVA_HOME environment variable
-#ENV JAVA_HOME /usr/lib/jvm/java-21-openjdk-amd64
-#
-## Add Java binaries to PATH
-#ENV PATH $JAVA_HOME/bin:$PATH
-#
-## Set the working directory
-#WORKDIR /app
-#
-## Copy the Maven project files to the container
-#COPY . .
-#
-## Build the application
-#RUN mvn clean package -DskipTests
-#
-## Expose the port the application runs on
-#EXPOSE 8081
-#
-## Set the entry point to run the application
-#ENTRYPOINT ["java", "-jar", "target/ProductService-0.0.1.jar"]
-FROM openjdk:24-jdk-oraclelinux8
+# Use an official Maven image with JDK 21 to build the application
+FROM maven:3.8.8-eclipse-temurin-21 AS build
 
-# Set the working directory in the container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the local JAR file to the container
-COPY target/ProductService-0.0.1-SNAPSHOT.jar app.jar
+# Copy the pom.xml and source code into the container
+COPY pom.xml .
+COPY src ./src
 
-# Expose the port the application runs on
+# Package the application
+RUN mvn clean package -DskipTests
+
+# Use a smaller base image to run the application
+FROM eclipse-temurin:21-jre-alpine
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the JAR file from the build stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Expose the port the app runs on
 EXPOSE 8082
 
-# Run the JAR file
+# Command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
