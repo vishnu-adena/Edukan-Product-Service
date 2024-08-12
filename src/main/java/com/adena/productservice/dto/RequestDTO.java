@@ -11,4 +11,5 @@ public class RequestDTO {
     private String category;
     private double price;
     public String image;
+
 }

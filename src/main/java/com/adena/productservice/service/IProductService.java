@@ -26,5 +26,8 @@ public interface IProductService  {
     ResponseDTO UpdateProduct(long id, RequestDTO requestDTO) throws ProductNotFound;
 
     String deleteProduct(long id) throws ProductNotFound;
+
+
+    List<ResponseDTO> getAllProductsByUserId() throws ProductNotFound;
 }
 

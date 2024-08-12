@@ -20,15 +20,15 @@ import java.util.Optional;
 @RequestMapping("/products/fakestore")
 public class FakeStoreProductController {
 
-    IFakeStoreProductService productService;
+    IFakeStoreProductService productServices;
     @Autowired
     public FakeStoreProductController(@Qualifier("fakeStore") IFakeStoreProductService productService) {
-        this.productService = productService;
+        this.productServices = productService;
     }
 
     @GetMapping("/products")
     public ResponseEntity<Product> getAllProducts() {
-        ResponseEntity response = new ResponseEntity(productService.getAllProducts(),
+        ResponseEntity response = new ResponseEntity(productServices.getAllProducts(),
                 HttpStatus.OK);
         return response;
     }
@@ -36,7 +36,7 @@ public class FakeStoreProductController {
     @PostMapping("/products")
     public ResponseEntity<Product> createProduct(@RequestBody RequestDTO product) {
         ResponseEntity response = new ResponseEntity(
-                productService.addProduct(product),
+                productServices.addProduct(product),
                 HttpStatus.CREATED
         );
         return response;
@@ -45,7 +45,7 @@ public class FakeStoreProductController {
     @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") int id) throws ProductNotFound {
        ResponseEntity responseEntity = new ResponseEntity(
-               productService.getProductById(id),
+               productServices.getProductById(id),
                HttpStatus.OK
        );
         return responseEntity;
@@ -54,7 +54,7 @@ public class FakeStoreProductController {
     @GetMapping("/categories")
     public ResponseEntity<String> getAllCategories() {
         ResponseEntity responseEntity = new ResponseEntity(
-          productService.getAllCategories(),
+          productServices.getAllCategories(),
           HttpStatus.OK
         );
         return responseEntity;
@@ -64,7 +64,7 @@ public class FakeStoreProductController {
     public ResponseEntity<Product> getProductsByCategory(@PathVariable("category") String category) {
 
         ResponseEntity responseEntity = new ResponseEntity(
-          productService.getAllProductsByCategory(category),
+          productServices.getAllProductsByCategory(category),
           HttpStatus.OK
         );
         return responseEntity;

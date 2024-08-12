@@ -24,4 +24,7 @@ public interface ProductRespository extends JpaRepository<Product, Long> {
     Product deleteProduct(boolean Bool, long id);
 
     Optional<Product> findByisDeletedAndId( boolean b,long id);
+
+    @Query("SELECT p FROM Product p where p.userId=?1 and p.isDeleted=?2 order by p.id")
+    List<Product> findProductsByUserIdAndDeleted(long userId, boolean deleted);
 }

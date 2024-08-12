@@ -5,12 +5,10 @@ import com.adena.productservice.dto.RequestDTO;
 import com.adena.productservice.dto.ResponseDTO;
 import com.adena.productservice.models.Category;
 import com.adena.productservice.models.Product;
-import com.adena.productservice.models.UserResponse;
 import com.adena.productservice.repositories.CategoryRepository;
 import com.adena.productservice.repositories.ProductRespository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -43,7 +41,7 @@ public class ProductService implements IProductService {
     @Override
     public List<ResponseDTO> getAllProducts() {
 
-        List<Product> products = productRepository.findAllByisDeleted(false);
+        List<Product> products = productRepository.findAll();
         List responseDTO = new ArrayList<ResponseDTO>();
         for (Product product : products){
             responseDTO.add(modifyProduct(product));
@@ -123,7 +121,7 @@ public class ProductService implements IProductService {
         responseDTO.setTitle(product.getName());
         responseDTO.setDescription(product.getDescription());
         responseDTO.setPrice(product.getPrice());
-        responseDTO.setImage(product.getImageUrl());
+        responseDTO.setImage(product.getImageBase64());
         responseDTO.setId(product.getId());
         responseDTO.setUpdated_At(product.getUpdated_At());
         responseDTO.setUpdated_At(product.getUpdated_At());
@@ -178,4 +176,17 @@ public class ProductService implements IProductService {
         productRepository.save(product.get());
         return "Product Deleted Successfully";
     }
+
+    @Override
+    public List<ResponseDTO> getAllProductsByUserId() throws ProductNotFound {
+        long userId = getUserid();
+        List<Product> products = productRepository.findProductsByUserIdAndDeleted(userId,false);
+        List responseDTO = new ArrayList<ResponseDTO>();
+        for (Product product : products){
+            responseDTO.add(modifyProduct(product));
+        }
+
+        return responseDTO;
+    }
+
 }
