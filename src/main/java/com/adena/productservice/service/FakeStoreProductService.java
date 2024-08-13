@@ -55,15 +55,18 @@ public class FakeStoreProductService implements IFakeStoreProductService{
     }
 
     @Override
-    public List<Product> getAllProducts(){
-        ResponseDTO[] responseList = restTemplate.getForObject("https://fakestoreapi.com/products",
-                ResponseDTO[].class);
-        List <Product> products = new ArrayList<>();
-        for (ResponseDTO responseDTO:responseList){
+    public ResponseDTO[] getAllProducts() {
+        ResponseDTO[] responseList = restTemplate.getForObject("https://fakestoreapi.com/products", ResponseDTO[].class);
 
-            products.add(getSinglefromFakeStore(responseDTO));
-        }
-        return products;
+        List<Product> products = new ArrayList<>();
+
+//        if (responseList != null) {  // Add null check
+//            for (ResponseDTO responseDTO : responseList) {
+//                products.add(getSinglefromFakeStore(responseDTO));
+//            }
+//        }
+
+        return responseList;
     }
 
     @Override

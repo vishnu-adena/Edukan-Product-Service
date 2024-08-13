@@ -3,6 +3,7 @@ package com.adena.productservice.controllers;
 
 import com.adena.productservice.Exceptions.ProductNotFound;
 import com.adena.productservice.dto.RequestDTO;
+import com.adena.productservice.dto.ResponseDTO;
 import com.adena.productservice.models.Category;
 import com.adena.productservice.models.Product;
 import com.adena.productservice.service.IFakeStoreProductService;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/products/fakestore")
+@RequestMapping("/fakestore")
 public class FakeStoreProductController {
 
     IFakeStoreProductService productServices;
@@ -27,10 +28,8 @@ public class FakeStoreProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<Product> getAllProducts() {
-        ResponseEntity response = new ResponseEntity(productServices.getAllProducts(),
-                HttpStatus.OK);
-        return response;
+    public List<ResponseDTO> getAllProducts() {
+        return List.of(productServices.getAllProducts());
     }
 
     @PostMapping("/products")

@@ -12,7 +12,7 @@ public interface IFakeStoreProductService {
 
     Optional<Product> getProductById(long id);
 
-    List<Product> getAllProducts();
+    ResponseDTO[] getAllProducts();
 
     Product replaceProduct(Product product) throws ProductNotFound;
 
