@@ -8,7 +8,7 @@ image:
   repository: vishnu11759/edukan-product-service
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "10373624127"
+  tag: "10373972274"
 eureka:
   url: http://eureka-service:8761/eureka/
 
