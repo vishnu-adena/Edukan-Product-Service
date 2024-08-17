@@ -1,6 +1,7 @@
 package com.adena.productservice.service;
 
 import com.adena.productservice.Exceptions.ProductNotFound;
+import com.adena.productservice.dto.ImageDTO;
 import com.adena.productservice.dto.RequestDTO;
 import com.adena.productservice.dto.ResponseDTO;
 import com.adena.productservice.models.Category;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Qualifier("DBProductService")
@@ -42,7 +44,7 @@ public class ProductService implements IProductService {
     public List<ResponseDTO> getAllProducts() {
 
         List<Product> products = productRepository.findAll();
-        List responseDTO = new ArrayList<ResponseDTO>();
+        List<ResponseDTO> responseDTO = new ArrayList<>();
         for (Product product : products){
             responseDTO.add(modifyProduct(product));
         }
@@ -59,7 +61,7 @@ public class ProductService implements IProductService {
         if (product.isEmpty()){
             throw new ProductNotFound("Product not Found with id "+id);
         }
-        product.get().setImageUrl(requestDTO.getImage());
+        //product.get().setImageUrl(requestDTO.getImage());
         product.get().setName(requestDTO.getTitle());
         product.get().setPrice(requestDTO.getPrice());
         product.get().setDescription(requestDTO.getDescription());
@@ -97,7 +99,7 @@ public class ProductService implements IProductService {
         }
         product.get().setName(requestDTO.getTitle() == null ? product.get().getName() : requestDTO.getTitle());
         product.get().setDescription(requestDTO.getDescription() == null ? product.get().getDescription() : requestDTO.getDescription());
-        product.get().setImageUrl(requestDTO.getImage() == null ? product.get().getImageUrl() : requestDTO.getImage());
+       // product.get().setImageUrl(requestDTO.getImage() == null ? product.get().getImageUrl() : requestDTO.getImage());
         product.get().setPrice(requestDTO.getPrice() <= 0 ? product.get().getPrice() : requestDTO.getPrice());
         Category category;
         Optional<Category> category1 = categoryRepository.findByName(requestDTO.getCategory());
@@ -118,10 +120,10 @@ public class ProductService implements IProductService {
 
     public ResponseDTO modifyProduct(Product product){
         ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setTitle(product.getName());
+        responseDTO.setName(product.getName());
         responseDTO.setDescription(product.getDescription());
         responseDTO.setPrice(product.getPrice());
-        responseDTO.setImage(product.getImageBase64());
+        responseDTO.setImage(product.getImage());
         responseDTO.setId(product.getId());
         responseDTO.setUpdated_At(product.getUpdated_At());
         responseDTO.setUpdated_At(product.getUpdated_At());
@@ -133,20 +135,38 @@ public class ProductService implements IProductService {
     public List<ResponseDTO> getProductsByCategory(String category) throws ProductNotFound{
 
         List<Product> products = productRepository.findAllByisDeletedAndcAndCategoryId(category);
-        List response = new ArrayList<>();
+        List <ResponseDTO>response = new ArrayList<>();
         for (Product product : products) {
             response.add(modifyProduct(product));
         }
         return response;
     }
     @Override
-    public Product addNewProduct(Product product) throws ProductNotFound {
+    public Product addNewProduct(RequestDTO request) throws ProductNotFound {
 
-        Optional<Category> category = categoryRepository.findByName(product.getCategory().getName());
+        Product product = new Product();
+        product.setName(request.getTitle());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+
+        // Handle images
+        List<ImageDTO> imageDTOs = request.getImage().stream().map(imageDTO -> {
+            // Create ImageDTO objects as needed
+            ImageDTO dto = new ImageDTO();
+            dto.setPublicId(imageDTO.getPublicId());
+            dto.setSecureUrl(imageDTO.getSecureUrl());
+            dto.setDisplayName(imageDTO.getDisplayName());
+            dto.setOriginalFileName(imageDTO.getOriginalFileName());
+            return dto;
+        }).collect(Collectors.toList());
+
+        // Set images as JSON array
+        product.setImage(imageDTOs);
+        Optional<Category> category = categoryRepository.findByName(request.getCategory());
         Category savedCategory ;
         if (category.isEmpty()){
             Category newCategory = new Category();
-            newCategory.setName(product.getCategory().getName());
+            newCategory.setName(request.getCategory());
             savedCategory = categoryRepository.save(newCategory);
         }
         else {
@@ -154,8 +174,7 @@ public class ProductService implements IProductService {
         }
         product.setCategory(savedCategory);
         product.setUserId(getUserid());
-        Product savedProduct = productRepository.save(product);
-        return savedProduct;
+        return productRepository.save(product);
     }
 
     private  long getUserid() {
@@ -181,7 +200,7 @@ public class ProductService implements IProductService {
     public List<ResponseDTO> getAllProductsByUserId() throws ProductNotFound {
         long userId = getUserid();
         List<Product> products = productRepository.findProductsByUserIdAndDeleted(userId,false);
-        List responseDTO = new ArrayList<ResponseDTO>();
+        List <ResponseDTO>responseDTO = new ArrayList<ResponseDTO>();
         for (Product product : products){
             responseDTO.add(modifyProduct(product));
         }

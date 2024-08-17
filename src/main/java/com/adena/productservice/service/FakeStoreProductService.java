@@ -33,10 +33,10 @@ public class FakeStoreProductService implements IFakeStoreProductService{
     public  Product getSinglefromFakeStore(ResponseDTO responseDTO){
         Product product = new Product();
         product.setId(responseDTO.getId());
-        product.setName(responseDTO.getTitle());
+        product.setName(responseDTO.getName());
         product.setDescription(responseDTO.getDescription());
         product.setPrice(responseDTO.getPrice());
-        product.setImageUrl(responseDTO.getImage());
+     //   product.setImageUrl(responseDTO.getImage());
         Category category = new Category();
         category.setName(responseDTO.getCategory());
         product.setCategory(category);

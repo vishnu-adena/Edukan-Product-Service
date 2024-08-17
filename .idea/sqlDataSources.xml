@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="2e380adc-4d8b-4e5d-868b-58cd8f79700d" name="DDL data source Mapping">
+      <data-sources db="043c7971-afc3-4742-85a2-8b2da2116bd6" ddl="dc0956f7-2602-4a93-a131-2afaa18bd5d3" />
+    </mapping>
+  </component>
   <component name="SqlDataSourceStorage">
     <option name="dataSources">
       <list>
         <State>
           <option name="id" value="58d7e641-9b44-4498-a20f-d71dbb233b5a" />
           <option name="name" value="DDL data source" />
+          <option name="dbmsName" value="POSTGRES" />
+          <option name="urls">
+            <array />
+          </option>
+          <option name="outLayout" value="File per object by schema.groovy" />
+        </State>
+        <State>
+          <option name="id" value="dc0956f7-2602-4a93-a131-2afaa18bd5d3" />
+          <option name="name" value="edukan DB (DDL)" />
           <option name="dbmsName" value="POSTGRES" />
           <option name="urls">
             <array />

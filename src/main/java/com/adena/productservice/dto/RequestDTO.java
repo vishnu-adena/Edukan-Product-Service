@@ -3,6 +3,8 @@ package com.adena.productservice.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class RequestDTO {
@@ -10,6 +12,6 @@ public class RequestDTO {
     private String description;
     private String category;
     private double price;
-    public String image;
+    public List<ImageDTO> image;
 
 }

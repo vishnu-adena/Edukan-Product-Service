@@ -15,8 +15,9 @@ public class BaseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CreatedDate
+
     @Temporal(TemporalType.TIMESTAMP)
+    @CreatedDate
     private Date created_At = new Date();
 
     @Temporal(TemporalType.TIMESTAMP)

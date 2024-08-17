@@ -17,7 +17,7 @@ public interface IProductService  {
 
     List<ResponseDTO> getProductsByCategory(String category) throws ProductNotFound;
 
-    Product addNewProduct(Product product) throws ProductNotFound;
+    Product addNewProduct(RequestDTO product) throws ProductNotFound;
 
     ResponseDTO replaceProduct(long id, RequestDTO requestDTO) throws ProductNotFound;
 
